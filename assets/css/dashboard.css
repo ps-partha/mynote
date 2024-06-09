@@ -1,0 +1,111 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", Helvetica, Arial, sans-serif;
+}
+:root {
+  --margin: 20px;
+  --border-radius: 10px;
+  --primary-white: #ffff;
+  --primary-black: #000000;
+  --nav-text: #1a1919da;
+}
+.nav-header {
+  margin: var(--margin);
+  display: flex;
+  justify-content: space-between;
+  border-radius: var(--border-radius);
+}
+.navbar-icons {
+  font-size: 20px;
+}
+.main-section {
+  display: flex;
+}
+.sider-nav {
+  height: 100vh;
+  width: 20%;
+  background-color: rgb(209, 206, 206);
+  flex-basis: 20%;
+}
+.sider-nav h3 {
+  padding: 10px;
+}
+.main-contant {
+  margin: var(--margin);
+}
+.sider-nav {
+  padding: 10px;
+}
+.nav-header ul li {
+  list-style: none;
+  display: inline-block;
+  color: #a7a7a8;
+}
+.nav-header .active-list {
+  color: #344767;
+}
+.by-page {
+  color: #0000009f;
+  font-size: 15px;
+  font-family: Helvetica, Arial, sans-serif;
+}
+hr {
+  opacity: 1;
+  border-top: 1px none rgb(175, 175, 175);
+}
+.side-nav-content a {
+  text-decoration: none;
+  color: var(--nav-text);
+}
+.side-nav-content ul li:hover {
+  background-color: rgba(158, 156, 156, 0.945);
+  animation: ease-in-out 2s;
+}
+.side-nav-content ul li {
+  list-style: none;
+  padding: 10px;
+  animation: ease-in-out 2s;
+  border-radius: var(--border-radius);
+  cursor: pointer;
+}
+.side-nav-content li {
+  background-color: rgba(145, 144, 156, 0.24);
+  margin-top: 10px;
+}
+.close-btn {
+  float: right;
+  font-size: 20px;
+}
+.close-btn:hover {
+  color: red;
+}
+/* ------------------------------ */
+
+.main-contant-tag-card {
+  padding: 10px;
+  background-color: #eeeeee;
+  border-radius: var(--border-radius);
+}
+/* -------------------- mobaile view ------------------- */
+
+@media screen and (max-width: 790px) {
+  #Side_Nav {
+    position: absolute;
+    width: 50%;
+    display: none;
+    animation-timing-function: ease-in-out;
+  }
+  .main-container {
+    flex-basis: 100%;
+  }
+}
+@media screen and (min-width: 790px) {
+  .main-container {
+    width: 100%;
+  }
+  #closeBtn,
+  #ManuButton {
+    display: none;
+  }
+}
