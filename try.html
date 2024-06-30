@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Notes App</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      a {
+        float: right;
+        transition: 1s;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <br />
+    <div id="notesContainer" d>
+      <form action="" method="post"></form>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        // Load notes from localStorage when the page loads
+        loadNotes();
+
+        // Save note to localStorage
+        $("#saveButton").click(function () {
+          var title = $("#title").val();
+          var content = $("#content").val();
+
+          if (title && content) {
+            var notes = JSON.parse(localStorage.getItem("notes")) || [];
+            var note = { title: title, content: content };
+            notes.push(note);
+            localStorage.setItem("notes", JSON.stringify(notes));
+
+            // Clear the form fields after saving
+            $("#title").val("");
+            $("#content").val("");
+
+            // Reload notes to display the newly added note
+            loadNotes();
+
+            alert("Note saved successfully!");
+          } else {
+            alert("Please fill in both fields.");
+          }
+        });
+
+        // Function to load notes from localStorage and display them
+        function loadNotes() {
+          var notes = JSON.parse(localStorage.getItem("notes")) || [];
+          var notesContainer = $("#notesContainer");
+          notesContainer.empty(); // Clear the container before adding notes
+
+          if (notes.length > 0) {
+            notes.forEach(function (note, index) {
+              var noteElement = `<div class="note">
+                            <h3>${note.title}</h3>
+                            <p>${note.content}</p>
+                            <button class="deleteButton" data-index="${index}">Delete</button>
+                        </div>`;
+              notesContainer.append(noteElement);
+            });
+
+            // Add click event to delete buttons
+            $(".deleteButton").click(function () {
+              var index = $(this).data("index");
+              notes.splice(index, 1); // Remove the note from the array
+              localStorage.setItem("notes", JSON.stringify(notes)); // Update localStorage
+              loadNotes(); // Reload notes to reflect the deletion
+            });
+          } else {
+            notesContainer.append("<p>No notes available.</p>");
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

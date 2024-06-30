@@ -10,22 +10,23 @@
   --font-size: 14px;
 }
 .login-section input[type="email"]:focus,
-input[type="password"]:focus,
-input[type="text"]:focus {
+input[type="password"]:focus {
   border: 1px solid #e91e63;
+}
+input [type="email"] {
+  margin-top: 10px;
 }
 .login-section input[type="email"],
 input[type="password"],
 input[type="text"] {
-  padding: 10px 10px;
-  margin: 7px 5px;
+  padding: 10px;
+  margin-left: 5px;
+  margin-bottom: 10px;
   border: none;
   border-radius: 5px;
   color-interpolation-filters: sRGB;
   width: 90%;
   border: 1px solid #344767;
-  -webkit-transition: 0.1s;
-  transition: 0.1s;
   outline: none;
 }
 .login-section h3 {
@@ -117,4 +118,134 @@ body {
   top: 50%;
   border-radius: 10px;
   width: 300px;
+}
+
+.nav-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: absolute;
+  transform: translate(-50%, -50%);
+  left: 50%;
+  top: 10%;
+  width: 90%;
+  background-color: rgba(185, 186, 245, 0.842);
+  padding: 8px 10px;
+  border-radius: 10px;
+}
+.logo img {
+  height: 40px;
+  width: 40px;
+  margin-left: 10px;
+  border-radius: 50%;
+  border: 2px solid rgb(255, 0, 55);
+}
+
+.M-manu {
+  font-size: 25px;
+  margin: 10px;
+}
+.manu ul li {
+  display: inline-block;
+}
+
+.manu ul li a {
+  padding: 5px 10px;
+  text-decoration: none;
+  font-size: 18px;
+}
+.manu ul li a {
+  color: black;
+}
+.manu ul li a:hover {
+  color: rgb(67, 20, 236);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0; /* Start with transparency */
+  }
+  to {
+    opacity: 1; /* Fully visible */
+  }
+}
+
+.header-content1,
+.header-content2 {
+  padding: 20px;
+  position: absolute;
+  background-color: rgba(240, 248, 255, 0.699);
+  transform: translate(-50%, -50%);
+  width: 90%;
+  border-radius: 10px;
+  opacity: 0; /* Start with transparency */
+  animation: fadeIn 3s ease forwards;
+}
+.header-content1 {
+  top: 40%;
+  left: 50%;
+  box-shadow: 1px 1px 2px 5px #08080875;
+}
+.header-content2 {
+  top: 70%;
+  left: 50%;
+  padding: 20px;
+  box-shadow: 1px 1px 2px 5px #08080875;
+}
+.header-content1 h2 {
+  font-size: 30px;
+}
+.circle {
+  background-color: #fff;
+  height: 100px;
+  width: 100px;
+  position: absolute;
+  border-radius: 50%;
+  right: 10px;
+  top: -60px;
+}
+/* ========= Mobail View =========== */
+
+@media screen and (max-width: 790px) {
+  #Manu {
+    display: none;
+  }
+}
+@media screen and (min-width: 790px) {
+  #Mnu {
+    display: none;
+  }
+  #HC2,
+  #HC1 {
+    width: 50%;
+  }
+  #HC2 {
+    left: 60%;
+  }
+  #HC1 {
+    left: 40%;
+  }
+}
+.dropwown-list ul li {
+  display: block;
+  list-style: none;
+  margin: 10px 10px;
+}
+
+.dropwown-list {
+  background-color: rgba(185, 186, 245, 0.842);
+  position: absolute;
+  right: 0px;
+  top: 80px;
+  padding: 10px;
+  border-radius: 10px;
+  display: none;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+.ListUl {
+  margin-right: 20px;
+}
+.UserLoginPage,
+.AdminLoginPage {
+  display: none;
 }
