@@ -148,9 +148,14 @@ html {
   width: 22.5%;
   margin-bottom: 16px;
   margin-right: 24px;
-  background-color: #ffffff;
-  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  background-color: transparent;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, 0.2);
   border-radius: 10px;
+}
+.column:hover {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  transition: opacity 0.5s, visibility 0.5s;
 }
 
 .column:hover .button_list {
@@ -217,9 +222,6 @@ html {
   justify-content: space-between;
 }
 
-.content {
-  color: rgb(10, 34, 54);
-}
 .title {
   display: flex;
   justify-content: space-between;
@@ -281,43 +283,32 @@ html {
   position: absolute;
   top: 50%;
   left: 50%;
+  padding: 15px;
   transform: translate(-50%, -50%);
   background-color: #eeeeee;
   box-sizing: border-box;
   border-radius: 5px;
-  padding: 15px;
-  width: 500px;
-  min-height: 200px;
+  width: 450px;
+  height: 380px;
   overflow: hidden;
   flex-direction: column;
   position: fixed;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.527);
 }
-textarea::placeholder {
-  font-weight: bold;
-  color: #000000ea;
-}
-#Title {
-  margin: 5px 0;
-  font-weight: bold;
-  min-height: 20px;
-  margin-top: 20px;
-}
 textarea {
   width: 100%;
   box-sizing: border-box;
   font-size: 15px;
-  padding: 0 10px;
   border: none;
   overflow: hidden;
   resize: none; /* Disable the default resizing */
   background-color: transparent;
   outline: none;
   transition: all 0.2s ease;
-  border: 1px solid #6d6d6d25;
   color: #000000;
   border-radius: 5px;
-  padding-top: 13px;
+  padding-bottom: 16px;
+  height: 250px;
   letter-spacing: 0.0142857143em;
   font-family: Roboto, Arial, sans-serif;
   font-weight: 400;
@@ -325,12 +316,13 @@ textarea {
   color: #202124;
   font-size: 14px;
 }
-#Messages {
-  min-height: 200px;
-  padding: 10px;
-  padding-bottom: 10px;
-}
 
-/* .blur-div{
-    
-} */
+.blur_div-active {
+  background-color: #00000054;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  position: fixed;
+  height: 100%;
+  top: 50%;
+  left: 50%;
+}

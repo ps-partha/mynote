@@ -1,79 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <title>Notes App</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-      a {
-        float: right;
-        transition: 1s;
-        font-weight: bold;
-      }
-    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
   </head>
-  <body>
-    <br />
-    <div id="notesContainer" d>
-      <form action="" method="post"></form>
-    </div>
-
-    <script>
-      $(document).ready(function () {
-        // Load notes from localStorage when the page loads
-        loadNotes();
-
-        // Save note to localStorage
-        $("#saveButton").click(function () {
-          var title = $("#title").val();
-          var content = $("#content").val();
-
-          if (title && content) {
-            var notes = JSON.parse(localStorage.getItem("notes")) || [];
-            var note = { title: title, content: content };
-            notes.push(note);
-            localStorage.setItem("notes", JSON.stringify(notes));
-
-            // Clear the form fields after saving
-            $("#title").val("");
-            $("#content").val("");
-
-            // Reload notes to display the newly added note
-            loadNotes();
-
-            alert("Note saved successfully!");
-          } else {
-            alert("Please fill in both fields.");
-          }
-        });
-
-        // Function to load notes from localStorage and display them
-        function loadNotes() {
-          var notes = JSON.parse(localStorage.getItem("notes")) || [];
-          var notesContainer = $("#notesContainer");
-          notesContainer.empty(); // Clear the container before adding notes
-
-          if (notes.length > 0) {
-            notes.forEach(function (note, index) {
-              var noteElement = `<div class="note">
-                            <h3>${note.title}</h3>
-                            <p>${note.content}</p>
-                            <button class="deleteButton" data-index="${index}">Delete</button>
-                        </div>`;
-              notesContainer.append(noteElement);
-            });
-
-            // Add click event to delete buttons
-            $(".deleteButton").click(function () {
-              var index = $(this).data("index");
-              notes.splice(index, 1); // Remove the note from the array
-              localStorage.setItem("notes", JSON.stringify(notes)); // Update localStorage
-              loadNotes(); // Reload notes to reflect the deletion
-            });
-          } else {
-            notesContainer.append("<p>No notes available.</p>");
-          }
-        }
+  <body></body>
+  <script>
+    $(document).ready(function () {
+      $("#CloseShowNote").click(function () {
+        $(".showData").removeClass("div-popup-active");
       });
-    </script>
-  </body>
+
+      $("#ShowNoteData").on("input", function () {
+        $(this).css("height", "auto");
+        let newHeight = Math.min(this.scrollHeight, 300);
+        $(this).css("height", newHeight + "px");
+      });
+      $("#Messages").on("input", function () {
+        $(this).css("height", "auto");
+        let newHeight = Math.min(this.scrollHeight, 300);
+        $(this).css("height", newHeight + "px");
+      });
+
+      var popup = $("#popupItm");
+      var btn = $("#AddNote");
+      var closebtn = $(".popupCloseButton");
+      var blur = document.getElementById("blur");
+      popup.hide();
+      btn.click(function () {
+        popup.show();
+        blur.classList.toggle("blur-div");
+      });
+      closebtn.click(function () {
+        popup.hide();
+        blur.classList.remove("blur-div");
+      });
+
+      $("#popupItm").on("submit", function (e) {
+        e.preventDefault();
+        $.ajax({
+          url: "save-note.php",
+          type: "POST",
+          dataType: "json",
+          data: {
+            Title: $("#Title").val(),
+            Messages: $("#Messages").val(),
+          },
+          success: function (response) {
+            if (response.status === "success") {
+              $(".error").css("color", "green");
+              $(".error").html(response.message);
+            } else {
+              $(".error").css("color", "red");
+              $(".error").html(response.message);
+            }
+            popup.hide();
+            blur.classList.remove("blur-div");
+          },
+          error: function (xhr, status, error) {
+            console.log("Error:", error);
+            $(".error").html("An error occurred");
+          },
+        });
+      });
+      // Handle form submission
+      $("#Update_").on("submit", function (event) {
+        event.preventDefault(); // Prevent the default form submission
+        var formData = $(this).serialize();
+        // Process the form data (e.g., send it via AJAX)
+        $.ajax({
+          type: "POST",
+          url: "update-note.php",
+          data: formData,
+          success: function (response) {
+            location.reload();
+          },
+          error: function (error) {
+            // Handle any errors
+            alert("An error occurred. Please try again.");
+            console.log(error);
+          },
+        });
+      });
+    });
+
+    function showDetails(note) {
+      let id = note.getAttribute("data-id");
+      $.ajax({
+        url: "showNote.php",
+        type: "POST",
+        data: { id: id },
+        success: function (response) {
+          var popup = $("#Show_data_div");
+          var blur = document.getElementById("blur");
+          var data = JSON.parse(response);
+          if (data) {
+            $("#NoteTitle").text(data.titles);
+            $("#ShowNoteData").val(data.messages);
+            $("#ID").val(id);
+            popup.toggleClass("div-popup-active");
+          } else {
+            $(".error").html("<p>Error parsing JSON.</p>");
+          }
+        },
+      });
+    }
+  </script>
 </html>

@@ -36,46 +36,99 @@
         </div>
         <span class="M-manu" id="Mnu"><i class="fa fa-bars"></i></span>
       </div>
+      <form id="AutoLoginSubmit">
+        <input type="hidden" name="email" id="Email">
+        <input type="hidden" name="password" id="Password">
+      </form>
     </section>
-    <section class="main-section"></section>
-    <section class="footer-section"></section>
   </body>
   <script>
-    $(document).ready(function () {
-      var popup = $("#popupItm");
-      var btn = $("#loginBtn");
-      $("#userlogin").on("click", function () {
+  $(document).ready(function () {
+    function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(";").shift();
+    }
+
+    const userEmail = getCookie("user_email");
+    const userPassword = getCookie("user_password");
+
+    var popup = $("#popupItm");
+    var btn = $("#loginBtn");
+
+    $("#userlogin").on("click", function () {
+      if (userEmail && userPassword) {
+        $("#Email").val(userEmail);
+        $("#Password").val(userPassword);
+        $("#AutoLoginSubmit").submit();
+      } else {
         popup.hide();
         window.location.href =
           "http://localhost/partha-sarker/sign-in.php?status=userlogin";
-      });
-      $("#adminlogin").on("click", function () {
+      }
+    });
+
+    $("#adminlogin").on("click", function () {
+      popup.hide();
+      window.location.href =
+        "http://localhost/partha-sarker/sign-in.php?status=adminlogin";
+    });
+
+    btn.on("click", function () {
+      popup.show();
+    });
+
+    $(document).on("click", function (event) {
+      if (
+        !$(event.target).closest("#popupItm").length &&
+        !$(event.target).is("#loginBtn")
+      ) {
         popup.hide();
-        window.location.href =
-          "http://localhost/partha-sarker/sign-in.php?status=adminlogin";
-      });
-      btn.on("click", function () {
-        popup.show();
-      });
-      $(document).on("click", function (event) {
-        if (
-          !$(event.target).closest("#popupItm").length &&
-          !$(event.target).is("#loginBtn")
-        ) {
-          popup.hide();
-        }
+      }
+    });
+
+    $("#AutoLoginSubmit").on("submit", function (e) {
+      e.preventDefault();
+      $.ajax({
+        url: "login.php",
+        type: "POST",
+        dataType: "json",
+        data: {
+          email: userEmail,
+          password: userPassword,
+        },
+        success: function (response) {
+          if (response.status === "success") {
+            setTimeout(function () {
+              window.location.href =
+                "http://localhost/partha-sarker/dashboard.php";
+            }, 1000);
+          } else {
+            $("#Error").css("color", "red");
+            $("#Error").html(response.message);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.log("Error:", error);
+          $("#Error").html("An error occurred during registration.");
+        },
       });
     });
-    function ShowManu() {
-      document.getElementById("Side_Nav").style.display = "block";
-    }
-    var x = document.getElementById("Side_Nav");
-    function Close() {
-      x.style.display = "none";
-    }
-    function Open() {
-      x.style.display = "block";
-    }
-  </script>
-  <script src="assets/js/main.js"></script>
+  });
+
+  function ShowManu() {
+    document.getElementById("Side_Nav").style.display = "block";
+  }
+
+  var x = document.getElementById("Side_Nav");
+
+  function Close() {
+    x.style.display = "none";
+  }
+
+  function Open() {
+    x.style.display = "block";
+  }
+</script>
+
 </html>

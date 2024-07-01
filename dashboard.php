@@ -12,7 +12,7 @@ if (!isset($_SESSION['user_email']) && !isset($_SESSION['user_name']) && !isset(
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Dashboard</title>
+    <title>My Notes</title>
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon"/>
     <link rel="stylesheet" href="assets/css/dashboard.css"/>
     <link rel="stylesheet" href="assets/css/admin.css"/>
@@ -32,85 +32,122 @@ if (!isset($_SESSION['user_email']) && !isset($_SESSION['user_name']) && !isset(
 textarea{
 user-select: none;
 cursor: pointer;
-padding-bottom:30px ;
+padding-bottom:30px;
+min-height:250px;
+max-height:300px;
 }
-
+#popupItm{
+    display:none;
+}
 .showData {
-  min-height: 300px;
-  max-height: 450px;
+  min-height: 450px;
   visibility: hidden;
-  transition: 0.5s;
+  display:none;
 }
 .text-area{
-    padding-bottom:30px ;
-    cursor: text;
-    min-height: 300px;
-  max-height: 450px;
+  padding-bottom:30px ;
+  cursor: text;
+  max-height:350px;
   border:none;
+  min-height: 350px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  border-bottom: 1px solid #6e6e6e9f;
+  border-radius:0px;
 }
-/* .blur-div{
-    filter:blur(10px);
-    pointer-events:none;
-    user-select:none;
-} */
+#Title {
+  padding: 10px;
+  font-weight: bold;
+  margin-top: 20px;
+  width: 100%;
+  outline:none;
+  border-radius:5px;
+  border: none;
+  border: 1px solid #6d6d6d25;
+  background-color: transparent;
+  margin-bottom:10px;
+}
+#Messages {
+  min-height: 250px;
+  max-height: 250px;
+  padding: 10px;
+  padding-bottom: 10px;
+  overflow-y: auto;
+  border: 1px solid #6d6d6d25;
+  resize: none;
+  padding: 10px;
+  font-size: 15px;
+  box-sizing: border-box;
+
+}
+
  .div-popup-active{
     visibility: visible;
     opacity: 1;
-    transition: 0.5s;
+    display:block;
 }
 
 #NoteTitle{
-    font-size:17px;
-    font-weight: bold;
-    padding-left:10px;
+  font-size:17px;
+  font-weight: bold;
+  padding-bottom:10px;
 }
-.formBtn {
-  padding-left: 10px;
+.formBtn,.show-note-div-title {
   display: flex;
   justify-content: space-between;
+
 }
 #CopyBtn{
     text-decoration: none;
     font-size:14px;
 }
-
+#saveBtn,.savebtn{
+  margin-top:10px;
+}
 #saveBtn,#CopyBtn{
     padding: 5px 20px;
     border:1px solid #3f3d3d59 ;
     border-radius:5px;
 }
 .button_list{
-display: flex;
+  display: flex;
   justify-content: space-between;
   padding:10px;
- border-radius: 10px;
- opacity: 0;
-    visibility: hidden;
+  border-radius: 10px;
+  opacity: 0;
+  visibility: hidden;
 
 }
+
 .button_list a,.title a{
     color:black;
 }
   </style>
 </head>
 <body>
+<div id="blur_div">
 <div class="showData" id="Show_data_div">
 <form id="Update_">
-      <p id="NoteTitle"></p>
-      <textarea id="ShowNoteData" class="text-area" name="messages"></textarea>
+      <div class="show-note-div-title">
+        <p id="NoteTitle"></p>
+        <span id="CloseShowNote"><i class="fa fa-times" aria-hidden="true"></i></span>
+      </div>
+      <textarea id="ShowNoteData" class="text-area" name="messages" placeholder="Note"></textarea>
       <input type="hidden" name="id" id="ID">
       <div class="formBtn">
-        <button type="submit" id="saveBtn">Close</button>
+        <button type="submit" id="saveBtn">Save</button>
       </div>
 </form>
 </div>
+
  <form class="add-notes" id="popupItm">
         <div class="popupCloseButton">&times;</div>
-        <textarea name="title" id="Title" placeholder="Title" required></textarea>
+        <input type="text" name="title" id="Title" placeholder="Title" required>
         <textarea name="messages" id="Messages" placeholder="Take a note..." required></textarea><br/>
         <button type="submit" class="savebtn">Save Note</button>
     </form>
-<div class="main-section">
+</div>
+<div class="main-section"> 
     <div class="sider-nav" id="Side_Nav">
         <span class="close-btn" id="closeBtn" onclick="Close()">
             <i class="fa fa-times" aria-hidden="true"></i>
@@ -120,7 +157,7 @@ display: flex;
         <div class="side-nav-content">
             <ul>
                 <a href="index.php"><li><i class="fa fa-home" aria-hidden="true"></i> Home</li></a>
-                <a href="#"><li class="active"><i class="fa fa-user" aria-hidden="true"></i> Dashboard</li></a>
+                <a href="#"><li class="active"><i class="fa fa-bell-o" aria-hidden="true"></i> Notes</li></a>
                 <a href="#"><li><i class="fa fa-cog" aria-hidden="true"></i> Settings</li></a>
                 <a href="logout.php"><li><i class="fa fa-sign-out" aria-hidden="true"></i> Sign out</li></a>
             </ul>
@@ -240,7 +277,7 @@ display: flex;
                             </li>";
                         }
                     } else {
-                        echo "<br/>There are currently no unpinned notes available";
+                        echo "<br/>";
                     }
                     $stmt->close();
                     ?>
@@ -250,106 +287,7 @@ display: flex;
         </div>
     </div>
 </div>
+
 <script src="assets/js/main.js"></script>
-<script>
-    $(document).ready(function () {
-  $("textarea")
-    .each(function () {
-      this.setAttribute(
-        "style",
-        "height:" + this.scrollHeight + "px;overflow-y:hidden;"
-      );
-    })
-    .on("input", function () {
-      this.style.height = "auto";
-      this.style.height = this.scrollHeight + "px";
-    });
-
-  var popup = $("#popupItm");
-  var btn = $("#AddNote");
-  var closebtn = $(".popupCloseButton");
-  var blur = document.getElementById("blur");
-  popup.hide();
-  btn.click(function () {
-    popup.show();
-    blur.classList.toggle("blur-div");
-  });
-  closebtn.click(function () {
-    popup.hide();
-    blur.classList.remove("blur-div");
-  });
-
-  $("#popupItm").on("submit", function (e) {
-    e.preventDefault();
-    $.ajax({
-      url: "save-note.php",
-      type: "POST",
-      dataType: "json",
-      data: {
-        Title: $("#Title").val(),
-        Messages: $("#Messages").val(),
-      },
-      success: function (response) {
-        if (response.status === "success") {
-          $(".error").css("color", "green");
-          $(".error").html(response.message);
-        } else {
-          $(".error").css("color", "red");
-          $(".error").html(response.message);
-        }
-        popup.hide();
-        blur.classList.remove("blur-div");
-      },
-      error: function (xhr, status, error) {
-        console.log("Error:", error);
-        $(".error").html("An error occurred");
-      },
-    });
-  });
-    // Handle form submission
-  $('#Update_').on('submit', function(event) {
-    event.preventDefault(); // Prevent the default form submission
-    var formData = $(this).serialize();
-    // Process the form data (e.g., send it via AJAX)
-    $.ajax({
-      type: 'POST',
-      url: 'update-note.php',
-      data: formData,
-      success: function(response) {
-        location.reload();
-      },
-      error: function(error) {
-        // Handle any errors
-        alert('An error occurred. Please try again.');
-        console.log(error);
-      }
-    });
-  });
-});
-
-function showDetails(note) {
-    let id = note.getAttribute("data-id");
-    $.ajax({
-        url: "showNote.php",
-        type: "POST",
-        data: { id: id },
-        success: function (response) {
-            var popup = $("#Show_data_div");
-            var blur = document.getElementById("blur");
-            var data = JSON.parse(response);
-            if (data) {
-                $("#NoteTitle").text(data.titles);
-                $("#ShowNoteData").val(data.messages);
-                $("#ID").val(id);
-                popup.toggleClass("div-popup-active");
-                
-            } else {
-                $(".error").html("<p>Error parsing JSON.</p>");
-            }
-        },
-    });
-}
-
-</script>
 </body>
 </html>
