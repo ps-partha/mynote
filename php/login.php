@@ -1,38 +1,37 @@
 <?php
 include('conf.php');
-session_name("Session1");
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
-    $checkbox = isset($_POST['remember_me']) ? $_POST['remember_me'] : '';
+    $checkbox = isset($_POST['remember-me']) ? $_POST['remember-me'] : '';
 
-    $stmt = $conn->prepare("SELECT `id`, `username`, `password`, `name` FROM `administrator` WHERE email = ?");
+    $stmt = $conn->prepare("SELECT `id`, `username`, `password`, `name` FROM `users` WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
-
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($id, $username, $hashedPassword, $name);
         $stmt->fetch();
+        
         if (password_verify($password, $hashedPassword)) {
             // Set session variables
-            $_SESSION['Id'] = $id;
-            $_SESSION['Username'] = $username;
-            $_SESSION['Email'] = $email;
-            $_SESSION['Name'] = $name;
-            session_write_close();
+            $_SESSION['user_id'] = $id;
+            $_SESSION['user_name'] = $username;
+            $_SESSION['user_email'] = $email;
+            $_SESSION['name'] = $name;
+            
             if ($checkbox === "checked") {
-                $response = array("status" => "success", "message" => "Admin login successfully.", "checkbox" => "checked");
+                $response = array("status" => "success", "message" => "User login successful.", "checkbox" => "checked");
             } else {
-                $response = array("status" => "success", "message" => "Admin login successfully.", "checkbox" => "unchecked");
+                $response = array("status" => "success", "message" => "User login successful.", "checkbox" => "unchecked");
             }
         } else {
-            $response = array("status" => "error", "message" => "Invalid Password!");
+            $response = array("status" => "error", "message" => "Password does not match.");
         }
     } else {
-        $response = array("status" => "error", "message" => "Invalid Email!");
+        $response = array("status" => "error", "message" => "Email not found.");
     }
 
     $stmt->close();

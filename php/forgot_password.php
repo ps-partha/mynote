@@ -3,8 +3,7 @@ include("conf.php");
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
-include('conf.php');
-require 'vendor/autoload.php';
+require '.\vendor\autoload.php';
 $msg = "";
 $mail = new PHPMailer(true);
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -18,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $conn->prepare("INSERT INTO password_resets (email, token) VALUES (?, ?)");
         $stmt->bind_param("ss", $email, $token);
         $stmt->execute();
-        $resetLink = "http://localhost/partha-sarker/reset_password.php?token=" . $token;
+        $resetLink = "http://localhost/partha-sarker/php/reset_password?token=" . $token;
   try{
     $mail->SMTPDebug = false;
     $mail->isSMTP();
@@ -185,7 +184,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     </table>
   </body>";
     if ($mail->send()){
-      $url = "sent-email.php?email=$email";
+      $url = "sent-email?email=$email";
       header("Location: $url");
       exit;
     }
@@ -205,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="../assets/css/style.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -225,7 +224,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="contanear">
       <div class="login-section" id="forget_pass">
         <h3>Forget Password</h3>
-        <form action="forgot_password.php" method="post"  >
+        <form action="forgot_password" method="post"  >
           <p id="massage"><?php echo $msg;?></p>
           <input
             type="email"
@@ -238,7 +237,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn">Get Password</button>
           </div>
           <div class="accCreate">
-            <a href="sign-in.php?status=signin"
+            <a href="sign-in?status=signin"
               >Don't have an account? <span class="signBtn">Sign up</span></a
             >
           </div>

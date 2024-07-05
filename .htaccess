@@ -1,0 +1,16 @@
+# Enable URL rewriting
+RewriteEngine On
+
+# Hide .php extension
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME}\.php -f
+RewriteRule ^([^\.]+)$ $1.php [NC,L]
+
+# Redirect to remove index.php from URL
+RewriteCond %{THE_REQUEST} ^[A-Z]{3,}\s/index\.php[/?\s] [NC]
+RewriteRule ^index\.php(.*)$ /$1 [R=301,NC,L]
+# Internally rewrite requests to / to index.php
+RewriteCond %{REQUEST_URI} !(\.[a-zA-Z0-9]{1,5}|/)$
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ index.php/$1 [L]

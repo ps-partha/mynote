@@ -1,5 +1,5 @@
 <?php
-include('conf.php');
+include("conf.php");
 $msg = "";   
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $token = $_POST['token'];
@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $conn->prepare("DELETE FROM password_resets WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
-        $url = 'sign-in.php?status=successful';
+        $url = '../sign-in?status=successful';
         header("Location: $url");
         exit;
     } else {
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="./assets/css/style.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="contanear">
       <div class="login-section">
         <h3>Forget Password</h3>
-        <form action="reset_password.php" method="post">
+        <form action="reset_password" method="post">
           <p id="massage"><?php echo $msg;?></p>
            <input type="hidden" name="token" value="<?php echo htmlspecialchars($token); ?>">
           <input
@@ -79,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit" class="btn">Reset Password</button>
           </div>
           <div class="accCreate">
-            <a href="sign-in.php?status=signin"
+            <a href="../sign-in?status=signin"
               >Don't have an account? <span class="signBtn">Sign up</span></a
             >
           </div>
