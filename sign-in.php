@@ -54,7 +54,7 @@
               value="checked"
             />
             <label for="remember-me">Remember Me</label>
-            <a href="./php/forgot_password" class="forgotPass"
+            <a href="#" class="forgotPass"
               >Forget Password</a
             >
           </div>
@@ -84,22 +84,9 @@
   ></script>
   <script>
     $(document).ready(function () {
-      function setCookie(name, value, days) {
-        const d = new Date();
-        d.setTime(d.getTime() + days * 24 * 60 * 60 * 1000);
-        const expires = "expires=" + d.toUTCString();
-        document.cookie = `${name}=${value};${expires};path=/`;
-      }
-      function getCookie(name) {
-        const value = `; ${document.cookie}`;
-        const parts = value.split(`; ${name}=`);
-        if (parts.length === 2) return parts.pop().split(";").shift();
-      }
-
       function displayError(message) {
         $("#Error").css("color", "red").html(message).show();
       }
-
       $("#UserLoginForm").on("submit", function (e) {
         e.preventDefault();
         $.ajax({
@@ -135,16 +122,6 @@
       $("#email, #password").on("focus", function () {
         $("#Error").hide();
       });
-
-      const userEmail = getCookie("user_email");
-      const userPassword = getCookie("user_password");
-
-      if (userEmail && userPassword) {
-        $("#email").val(userEmail);
-        $("#password").val(userPassword);
-        $("#remember-me").prop("checked", true);
-        $("#UserLoginForm").submit();
-      }
     });
   </script>
 </html>

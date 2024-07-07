@@ -297,9 +297,8 @@ if (!isset($_SESSION['user_email']) && !isset($_SESSION['user_name']) && !isset(
                                 </div>
                             </div>
                             <div class='button_list'>
-                                <a href='../php/update?id=${note.id}&status=archive'><span class="footer_icon"><i class='bi bi-archive' aria-hidden='true'></i></span></a>
-                                <a href='../php/update?id=${note.id}&status=trash'><span class="footer_icon"><i class='fa fa-trash-o' aria-hidden='true'></i></span></a>
-                                <a href='../php/update?id=${note.id}&status='><span class="footer_icon"><i class='fa fa-share' aria-hidden='true'></i></span></a>
+                               <a href='../php/update?id=${note.id}&status=delete'><span class="footer_icon"><i class='fa fa-trash-o' aria-hidden='true'></i></span></a>
+                            <a href='../php/update?id=${note.id}&status=restore'><span class="footer_icon"><i class="bi bi-arrow-counterclockwise"></i></span></a>
                             </div>
                         </div>
                     </li>
@@ -356,40 +355,46 @@ $("#searchQuery").on("keyup", function () {
 });
     // Show note details
 function showDetails(note) {
-        $.ajax({
-          url: "http://localhost/partha-sarker/notes/getNotes.php",
-          method: "GET",
-          dataType: "json",
-          success: function (response) {
+    $.ajax({
+        url: "http://localhost/partha-sarker/notes/getNotes.php",
+        method: "GET",
+        dataType: "json",
+        success: function (response) {
             function getTitlesAndMessagesById(id) {
-              var filteredData = response.data
-                .filter(function (note) {
-                  return note.id === id;
-                })
-                .map(function (note) {
-                  return {
-                    title: note.titles,
-                    message: note.messages,
-                  };
-                });
-              return filteredData[0]; // Assuming id is unique and we want the first match
+                var filteredData = response.data
+                    .filter(function (note) {
+                        return note.id === id;
+                    })
+                    .map(function (note) {
+                        return {
+                            title: note.titles,
+                            message: note.messages,
+                        };
+                    });
+                return filteredData[0]; // Assuming id is unique and we want the first match
             }
             let id = note.getAttribute("data-id");
             var noteId = getTitlesAndMessagesById(parseInt(id));
             $("#ID").val(id);
             if (noteId) {
-              var popup = $("#Show_data_div");
-              $("#NoteTitle").val(noteId.title);
-              $("#ShowNoteData").val(noteId.message);
-              popup.toggleClass("div-popup-active").fadeIn();
-              $("#blur_div").toggleClass("blur_div-active").fadeIn();
+              var botton_ic = `
+                 <a href='../php/update?id=${noteId}&status=delete'><span class="footer_icon"><i class='fa fa-trash-o' aria-hidden='true'></i></span></a>
+                  <a href='../php/update?id=${noteId}&status=restore'><span class="footer_icon"><i class="bi bi-arrow-counterclockwise"></i></span></a>
+                  <button type="submit" id="saveBtn">Close</button>
+                  `;
+                $('.formBtn').html(botton_ic);
+                var popup = $("#Show_data_div");
+                $("#NoteTitle").val(noteId.title);
+                $("#ShowNoteData").val(noteId.message);
+                popup.toggleClass("div-popup-active").fadeIn();
+                $("#blur_div").toggleClass("blur_div-active").fadeIn();
             }
-          },
-          error: function (error) {
-            console.error("Error:", error);
-          },
-        });
-      }
+        },
+        error: function (error) {
+            console.error("Error fetching note details:", error);
+        },
+    });
+}
     </script>
   </body>
 </html>

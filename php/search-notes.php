@@ -1,7 +1,18 @@
 <?php
 header('Content-Type: application/json');
-session_start();
 include("conf.php");
+// Set secure session cookies
+session_set_cookie_params([
+    'httponly' => true,
+    'secure' => true,
+    'samesite' => 'Strict'
+]);
+session_start();
+// Function to sanitize input
+function sanitize_input($data) {
+    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+}
+
 
 // Check if the user is authenticated
 if (!isset($_SESSION['user_email']) || !isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
@@ -10,9 +21,9 @@ if (!isset($_SESSION['user_email']) || !isset($_SESSION['user_name']) || !isset(
 }
 
 if (isset($_POST['query'])) {
-    $username = $_SESSION['user_name'];
-    $userID = $_SESSION['user_id'];
-    $query = $_POST['query'];
+    $username = sanitize_input($_SESSION['user_name']);
+    $userID = sanitize_input($_SESSION['user_id']);
+    $query = sanitize_input($_POST['query']);
 
     // Adjusted SQL query with proper parentheses around OR conditions
     $sql = "SELECT * FROM user_notes WHERE (`titles` LIKE ? OR `messages` LIKE ?) AND `username`= ? AND `user_id`= ?";

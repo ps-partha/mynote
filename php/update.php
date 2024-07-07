@@ -1,12 +1,26 @@
 <?php
-session_start();
-include("conf.php");
 
-if (!isset($_SESSION['user_email']) && !isset($_SESSION['user_name']) && !isset($_SESSION['user_id'])) {
+include("conf.php");
+header('Content-Type: application/json');
+session_set_cookie_params([
+    'httponly' => true,
+    'secure' => true,
+    'samesite' => 'Strict'
+]);
+
+session_start();
+// Check if the user is authenticated
+if (!isset($_SESSION['user_email']) || !isset($_SESSION['user_name']) || !isset($_SESSION['user_id'])) {
     echo json_encode(['status' => 'error', 'message' => 'User not authenticated']);
     exit;
 }
 
+// Function to sanitize input
+function sanitize_input($data) {
+    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
+
+// Function to update note status
 function updateNoteStatus($noteId, $newStatus) {
     global $conn;
 
@@ -37,6 +51,7 @@ function updateNoteStatus($noteId, $newStatus) {
     $stmt->close();
 }
 
+// Function to delete note
 function deleteNote($noteId) {
     global $conn;
     $stmt = $conn->prepare("DELETE FROM user_notes WHERE id = ?");
@@ -56,7 +71,7 @@ function deleteNote($noteId) {
     $stmt->close();
 }
 
-
+// Function to redirect based on status
 function redirectBasedOnStatus($status) {
     switch ($status) {
         case 'restore':
@@ -77,13 +92,14 @@ function redirectBasedOnStatus($status) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if (isset($_GET['id']) && isset($_GET['status'])) {
-        $noteId = intval($_GET['id']);
-        $newStatus = $_GET['status'];
+        $noteId = intval(sanitize_input($_GET['id']));
+        $newStatus = sanitize_input($_GET['status']);
+        
         if (in_array($newStatus, ['pinned', 'unpinned', 'restore', 'trash', 'archive', 'unarchive'])) {
             updateNoteStatus($noteId, $newStatus);
         } elseif ($newStatus == 'delete') {
             deleteNote($noteId);
-        }else {
+        } else {
             echo json_encode(['status' => 'error', 'message' => 'Invalid status']);
         }
     } else {

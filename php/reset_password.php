@@ -1,10 +1,35 @@
 <?php
 include("conf.php");
+header('Content-Type: application/json');
 $msg = "";   
+
+// Function to sanitize input
+function sanitize_input($data) {
+    return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
+}
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $token = $_POST['token'];
+    $token = sanitize_input($_POST['token']);
     $newPassword = $_POST['password'];
+
+    // Check if token and new password are provided
+    if (empty($token) || empty($newPassword)) {
+        echo json_encode(['status' => 'error', 'message' => 'Token and password are required']);
+        exit;
+    }
+
+    // Validate password strength (example: minimum 8 characters, at least one letter and one number)
+    if (!preg_match('/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/', $newPassword)) {
+        echo json_encode(['status' => 'error', 'message' => 'Password must be at least 8 characters long and include at least one letter and one number']);
+        exit;
+    }
+
+    // Check if token exists in the password_resets table
     $stmt = $conn->prepare("SELECT email FROM password_resets WHERE token = ?");
+    if ($stmt === false) {
+        echo json_encode(['status' => 'error', 'message' => 'Prepare failed: ' . $conn->error]);
+        exit;
+    }
     $stmt->bind_param("s", $token);
     $stmt->execute();
     $stmt->store_result();
@@ -12,31 +37,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($stmt->num_rows > 0) {
         $stmt->bind_result($email);
         $stmt->fetch();
-        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
-        $stmt = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
-        $stmt->bind_param("ss", $hashedPassword, $email);
-        $stmt->execute();
 
-        $stmt = $conn->prepare("DELETE FROM password_resets WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
+        // Update user's password
+        $hashedPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+        $update_stmt = $conn->prepare("UPDATE users SET password = ? WHERE email = ?");
+        if ($update_stmt === false) {
+            echo json_encode(['status' => 'error', 'message' => 'Prepare failed: ' . $conn->error]);
+            exit;
+        }
+        $update_stmt->bind_param("ss", $hashedPassword, $email);
+        $update_stmt->execute();
+
+        // Delete the token from password_resets table
+        $delete_stmt = $conn->prepare("DELETE FROM password_resets WHERE email = ?");
+        if ($delete_stmt === false) {
+            echo json_encode(['status' => 'error', 'message' => 'Prepare failed: ' . $conn->error]);
+            exit;
+        }
+        $delete_stmt->bind_param("s", $email);
+        $delete_stmt->execute();
+
         $url = '../sign-in?status=successful';
         header("Location: $url");
         exit;
     } else {
-        $msg =  "Invalid token.";
+        $msg = "Invalid token.";
+        echo json_encode(['status' => 'error', 'message' => $msg]);
     }
 
     $stmt->close();
     $conn->close();
 } else {
     if (isset($_GET['token'])) {
-        $token = $_GET['token'];
+        $token = sanitize_input($_GET['token']);
     } else {
         die("Token not provided.");
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
