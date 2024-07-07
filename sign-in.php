@@ -106,7 +106,7 @@
                 setCookie("user_password", $("#password").val(), 7);
               }
               setTimeout(function () {
-                window.location.href = "http://localhost/partha-sarker/notes/";
+                window.location.href = "http://localhost/mynote/notes/"; // Replace  www.example.com and add your website domain 
               }, 500);
             } else {
               displayError(response.message);

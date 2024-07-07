@@ -104,8 +104,8 @@
                 $("#error").html(response.message);
                 setTimeout(function () {
                   window.location.href =
-                    "http://localhost/partha-sarker/sign-in"; // Replace with your desired URL
-                }, 2000); // 2000 milliseconds = 2 seconds
+                    "http://localhost/my-note/sign-in"; // Replace http://localhost/my-note and add your desired URL
+                }, 2000);
               } else {
                 $("#error").css("color", "green");
                 $("#error").html(response.message);

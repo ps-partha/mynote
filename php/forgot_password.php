@@ -17,18 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt = $conn->prepare("INSERT INTO password_resets (email, token) VALUES (?, ?)");
         $stmt->bind_param("ss", $email, $token);
         $stmt->execute();
-        $resetLink = "http://localhost/partha-sarker/php/reset_password?token=" . $token;
+        $resetLink = "http://localhost/my-note/php/reset_password?token=" . $token; // Replace  http://localhost/partha-sarker and add your domain
   try{
     $mail->SMTPDebug = false;
     $mail->isSMTP();
     $mail->Host       = 'smtp.gmail.com';
     $mail->SMTPAuth   = true;
-    $mail->Username   = 'feeling2point0@gmail.com';
-    $mail->Password   = 'wyqdiihrbmxancpe';
+    $mail->Username   = 'website email address';
+    $mail->Password   = 'password';
     $mail->SMTPSecure = 'tls';
     $mail->Port       = 587;
     // Recipients
-    $mail->setFrom('feeling2point0@gmail.com', 'Admin');
+    $mail->setFrom('website email address', 'Admin');
     $mail->addAddress($email);              
     $mail->isHTML(true);
     $mail->Subject = 'Password Reset';

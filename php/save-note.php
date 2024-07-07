@@ -21,7 +21,7 @@ if (!isset($_SESSION['user_email']) || !isset($_SESSION['user_name']) || !isset(
 } else {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $title = sanitize_input($_POST['title']);
-        $messages = sanitize_input($_POST['messages']);
+        $messages = $_POST['messages'];
         $username = sanitize_input($_SESSION['user_name']);
         $userId = sanitize_input($_SESSION['user_id']);
 

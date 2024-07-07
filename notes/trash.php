@@ -188,12 +188,10 @@ if (!isset($_SESSION['user_email']) && !isset($_SESSION['user_name']) && !isset(
     </div>
     <script>
      $(document).ready(function () {
-    const apiUrl = "http://localhost/partha-sarker/notes/getNotes.php";
-    
     // Fetch and display all notes
     function fetchNotes() {
         $.ajax({
-            url: apiUrl,
+            url: "./getnotes.php",
             method: "GET",
             dataType: "json",
             success: function (data) {
@@ -356,7 +354,7 @@ $("#searchQuery").on("keyup", function () {
     // Show note details
 function showDetails(note) {
     $.ajax({
-        url: "http://localhost/partha-sarker/notes/getNotes.php",
+        url: "./getnotes.php",
         method: "GET",
         dataType: "json",
         success: function (response) {

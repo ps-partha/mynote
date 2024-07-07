@@ -16,7 +16,7 @@ function sanitize_input($data) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = sanitize_input($_POST['id']);
-    $messages = sanitize_input($_POST['messages']);
+    $messages = $_POST['messages'];
     $title = sanitize_input($_POST['title']);
 
     // Validate input
