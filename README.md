@@ -54,6 +54,17 @@ CREATE TABLE password_resets (
 
 
 ```
+## Fetures
+Here're some of the project's best features:
+
+*   Secure user login
+*   User-friendly Interface
+*   Auto Login system
+*   Trash, Archive, Pinned And Searching Features
+*   Cross-site scripting And SQL injection attack protection
+## Working Now
+* Data encryption technology
+* Usability And Other
 
 ## Usage
 
@@ -61,7 +72,7 @@ CREATE TABLE password_resets (
 
 # In sign-in.php, sign-up.php and reset_password.php file Need to add your domain name like this
 
-window.location.href = "https://www.example.com/notes/";
+  window.location.href = "https://www.example.com/notes/";
 
 # Then host any hosting site or host whatever you want.
 
